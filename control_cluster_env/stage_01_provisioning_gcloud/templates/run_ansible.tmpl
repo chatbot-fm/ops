@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+cp ../stage_01_provisioning_gcloud/stage_output/hosts.ini .
+cp ../stage_01_provisioning_gcloud/stage_output/ansible_vars.yml .
+
+ansible-playbook -i hosts.ini $@
+
+rm ansible_vars.yml
+rm hosts.ini

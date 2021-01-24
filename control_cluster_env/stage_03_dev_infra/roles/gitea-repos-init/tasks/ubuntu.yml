@@ -1,0 +1,11 @@
+---
+- name: Create influx repo
+  uri:
+    url: "http://{{git_dns}}/api/v1/user/repos"
+    method: POST
+    user: "{{ admin_user }}"
+    password: "{{ admin_pwd }}"
+    force_basic_auth: true
+    body_format: json
+    body: '{ "auto_init": true, "description": "influx k8s pod", "name": "infra-influxdb", "private": true }'
+    status_code: 201

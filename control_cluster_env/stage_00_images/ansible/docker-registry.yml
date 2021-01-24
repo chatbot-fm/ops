@@ -1,0 +1,8 @@
+---
+# k8s-control-install
+- hosts: default
+  become: true
+  roles:
+    - base
+    - docker-base
+    - docker-registry

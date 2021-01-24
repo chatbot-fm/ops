@@ -1,0 +1,8 @@
+---
+# wireguard config
+bastion_vpn_ip: "10.10.0.2/24"
+client_vpn_ip: "10.10.0.3/24"
+allow_client_ip: "10.10.0.3/32"
+allow_vpn_ip: "10.10.0.0/24"
+allow_remote_network_ip: "10.2.0.0/16"
+wg_port: 51820

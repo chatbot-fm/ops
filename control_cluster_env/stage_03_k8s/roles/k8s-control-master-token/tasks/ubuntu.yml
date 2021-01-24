@@ -1,0 +1,22 @@
+---
+- name: "token generate"
+  command: kubeadm token create
+  register: token
+
+- debug: msg="token {{ token.stdout }}"
+
+- name: "cert checksum"
+  shell: >
+      openssl x509 \
+      -pubkey \
+      -in /etc/kubernetes/pki/ca.crt \
+      | openssl rsa -pubin -outform der 2>/dev/null \
+      | openssl dgst -sha256 -hex \
+      | sed 's/^.* //'
+  register: cert_hash
+
+- debug: msg="cert {{ cert_hash.stdout }}"
+
+- set_fact:
+    k8s_token: "{{ token.stdout }}"
+    k8s_cert_hash: "{{ cert_hash.stdout}}"

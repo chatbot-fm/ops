@@ -1,0 +1,79 @@
+---
+- name: Gitea initial setup
+  command: >
+    curl -X POST \
+    -F "db_type=SQLite3" \
+    -F "db_host=localhost:3306" \
+    -F "db_user=root" \
+    -F "db_name=gitea" \
+    -F "ssl_mode=disable" \
+    -F "charset=utf8" \
+    -F "db_path=/data/gitea/gitea.db" \
+    -F "app_name=Gitea: Git with a cup of tea" \
+    -F "repo_root_path=/data/git/repositories" \
+    -F "lfs_root_path=/data/git/lfs" \
+    -F "run_user=git" \
+    -F "domain={{ git_dns }}" \
+    -F "ssh_port=222" \
+    -F "ssh_domain={{ git_dns }}" \
+    -F "http_port=3000" \
+    -F "app_url=http://{{ git_dns }}/" \
+    -F "log_root_path=/data/gitea/log" \
+    -F "enable_federated_avatar=on" \
+    -F "enable_open_id_sign_in=on" \
+    -F "enable_open_id_sign_up=on" \
+    -F "default_allow_create_organization=on" \
+    -F "default_enable_timetracking=on" \
+    -F "no_reply_address=noreply.localhost" \
+    --url "http://{{ git_dns }}/install"
+
+- name: Create admin Gitea user
+  become: true
+  command: >
+      su admin -c "docker exec gitea /bin/sh -c \"su git -c 'gitea -w /data -c /data/gitea/conf/app.ini admin create-user --username {{ admin_user }} --password {{ admin_pwd }} --email {{ admin_email }} --admin'\""
+
+  args:
+    chdir: /root
+
+- name: Read pub key
+  command: "cat {{ ansible_ssh_public_key_file }}"
+  delegate_to: 127.0.0.1
+  register: admin_key
+
+- name: Add admin key
+  uri:
+    url: "http://{{ git_dns }}/api/v1/user/keys"
+    method: POST
+    user: "{{ admin_user }}"
+    password: "{{ admin_pwd }}"
+    force_basic_auth: true
+    body_format: json
+    body: >
+        {
+          "read_only": false,
+          "title": "infra admin",
+          "key": "{{ admin_key.stdout }}"
+        }
+    status_code: 201
+
+- name: Create drone token
+  uri:
+    url: "http://{{ git_dns }}/api/v1/user/applications/oauth2"
+    method: POST
+    user: "{{ admin_user }}"
+    password: "{{ admin_pwd }}"
+    force_basic_auth: true
+    body_format: json
+    body: >
+        {
+          "name": "drone",
+          "redirect_uris": [
+            "http://{{ drone_dns }}/login"
+          ]
+        }
+    status_code: 201
+  register: token_response
+
+- set_fact:
+    gitea_client_id: "{{ token_response.json.client_id }}"
+    gitea_client_secret: "{{ token_response.json.client_secret }}"

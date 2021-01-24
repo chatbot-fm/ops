@@ -1,0 +1,10 @@
+---
+- name: "join command"
+#  debug: msg="kubeadm join {{apiserver_advertise_address}}:6443 --token {{hostvars[groups['k8s-control-master'][0]]['k8s_token']}} --discovery-token-ca-cert-hash sha256:{{hostvars[groups['k8s-control-master'][0]]['k8s_cert_hash']}} --control-plane"
+  debug: msg="kubeadm join --discovery-token {{hostvars[groups['k8s-control-master'][0]]['k8s_token']}} --discovery-token-ca-cert-hash sha256:{{hostvars[groups['k8s-control-master'][0]]['k8s_cert_hash']}} --control-plane --certificate-key {{hostvars[groups['k8s-control-master'][0]]['k8s_cert_key']}} {{apiserver_advertise_address}}:6443"
+- name: "join control node"
+#  shell: kubeadm join {{apiserver_advertise_address}}:6443 --token {{hostvars[groups['k8s-control-master'][0]]['k8s_token']}} --discovery-token-ca-cert-hash sha256:{{hostvars[groups['k8s-control-master'][0]]['k8s_cert_hash']}} --control-plane
+  shell: kubeadm join --discovery-token {{hostvars[groups['k8s-control-master'][0]]['k8s_token']}} --discovery-token-ca-cert-hash sha256:{{hostvars[groups['k8s-control-master'][0]]['k8s_cert_hash']}} --control-plane --certificate-key {{hostvars[groups['k8s-control-master'][0]]['k8s_cert_key']}} {{apiserver_advertise_address}}:6443
+  register: out
+- debug: msg="k8s control slave init stdout {{out.stdout}}"
+- debug: msg="k8s control slave init stderr {{out.stdout}}"

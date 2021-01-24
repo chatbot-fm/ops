@@ -1,0 +1,33 @@
+[infra:vars]
+ansible_ssh_private_key_file = ${remote_ssh_private_key_file}
+ansible_ssh_public_key_file = ${remote_ssh_public_key_file}
+ansible_user = ${remote_ssh_user}
+
+[k8s-control-master]
+${k8s_control_master_ip}
+        
+[k8s-control-slave]
+${k8s_control_slave_ips}
+
+[k8s-control-lb]
+${k8s_control_lb_ip}
+
+[k8s-worker]
+${k8s_worker_ips}
+
+[infra:children]
+k8s-control-master
+k8s-control-slave
+k8s-worker
+bastion
+gitea
+drone
+
+[bastion]
+${bastion_ip}
+
+[gitea]
+${gitea_ip}
+
+[drone]
+${drone_ip}

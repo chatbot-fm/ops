@@ -1,0 +1,18 @@
+version: "2"
+
+services:
+  server:
+    image: gitea/gitea:1.12.1
+    container_name: gitea
+    restart: always
+    network_mode: "bridge"
+    environment:
+      - USER_UID={{ getent_passwd.admin[1] }}
+      - USER_GID={{ getent_group.admin[1] }}    
+    volumes:
+      - /home/admin/gitea/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "80:3000"
+      - "222:22"

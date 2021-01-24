@@ -1,0 +1,14 @@
+---
+- name: Wait for automatic system updates
+  become: true
+  shell: "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;"
+
+- name: "apt: setup openssl"
+  apt:
+    update_cache: true
+    name:
+      - openssl
+    state: present
+
+- name: "pull docker image"
+  command: "docker pull drone/drone:1"

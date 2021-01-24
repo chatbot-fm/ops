@@ -1,0 +1,70 @@
+---
+- name: "Copy iptables config for k8s"
+  template:
+    src: templates/k8s-iptables-cfg.j2
+    dest: "/etc/sysctl.d/k8s.conf"
+
+- name: "apt: install k8s prerequisites"
+  apt:
+    name:
+      - apt-transport-https
+      - curl
+    state: present
+
+- name: "Add k8s apt repository key"
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: "Add k8s repo"
+  template:
+    src: templates/k8s-apt-repo.j2
+    dest: "/etc/apt/sources.list.d/kubernetes.list"
+
+- name: "apt update: post k8s repository add"
+  apt:
+    update_cache: true
+
+- name: "apt: install k8s"
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+
+- name: "apt-mark hold"
+  shell: apt-mark hold kubelet kubeadm kubectl
+
+- name: "Enable and start 'k8s' service"
+  service:
+    name: kubelet
+    enabled: true
+    state: started
+
+- name: "Disable swap mount points"
+  mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  with_items:
+    - swap
+    - none
+
+- name: "Execute swapoff"
+  command: swapoff -a
+  when: ansible_swaptotal_mb > 0
+
+- name: "Pre-configure k8s: pull images"
+  command: kubeadm config images pull
+
+- name: Create a directory if it does not exist
+  file:
+    path: /root/k8s-plugins
+    state: directory
+    mode: '0755'
+
+- name: "Pull network plugin"
+  shell: >
+    cd /root/k8s-plugins && \
+    wget "https://docs.projectcalico.org/v3.14/manifests/calico.yaml"

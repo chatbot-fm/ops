@@ -1,0 +1,19 @@
+---
+- name: "Create ./stage_output dir"
+  file:
+    path: ./stage_output
+    state: directory
+    mode: '0755'
+
+- name: "client wg: Render config for wg0 interface"
+  template:
+    src: templates/wireguard.template
+    dest: ./stage_output/client_wg.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "client wg: turn up vpn on the client"
+  command: >
+    wg-quick up ./stage_output/client_wg.conf
+  when: setup_vpn_client is not defined or setup_vpn_client|bool

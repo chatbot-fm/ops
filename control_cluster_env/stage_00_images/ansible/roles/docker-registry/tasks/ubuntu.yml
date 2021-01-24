@@ -1,0 +1,28 @@
+- name: "Create a /root/auth"
+  file:
+    path: /root/auth
+    state: directory
+    mode: '0755'
+
+- name: "Generate auth"
+  shell: docker run --entrypoint htpasswd registry:2 -Bbn admin admin > /root/auth/htpasswd
+
+- name: "Create a /mnt/registry"
+  file:
+    path: /mnt/registry
+    state: directory
+    mode: '0755'
+
+- name: "Run registry"
+  shell: 'docker run -d \
+  -p 5000:5000 \
+  --restart=always \
+  --name registry \
+  --network host \
+  -v /root/auth:/auth \
+  -v /mnt/registry:/var/lib/registry \
+  -e "REGISTRY_AUTH=htpasswd" \
+  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+  -e "REGISTRY_HTTP_SECRET=constantrandomsecret" \
+  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
+  registry:2'

@@ -1,0 +1,10 @@
+[Interface]
+PrivateKey = {{ hostvars[groups['bastion'][0]]['client_private_key'] }}
+Address = {{ client_vpn_ip }}
+MTU = 1200
+DNS = 169.254.169.254
+
+[Peer]
+PublicKey = {{ hostvars[groups['bastion'][0]]['server_public_key'] }}
+Endpoint = {{ bastion_ip }}:{{ wg_port }}
+AllowedIPs = {{ allow_vpn_ip }}, {{ allow_remote_network_ip }}, 169.254.169.254

@@ -1,0 +1,11 @@
+---
+- name: "wait for automatic system updates"
+  become: true
+  shell: "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;"
+
+- name: "apt: install wireguard"
+  apt:
+    update_cache: true
+    name:
+      - wireguard
+    state: present

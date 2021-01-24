@@ -1,0 +1,21 @@
+---
+- name: "server wg: Render config for wg0 interface"
+  template:
+    src: templates/wireguard.template
+    dest: /etc/wireguard/wg0.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "server: enable forwarding"
+  shell:
+    cmd: >
+      echo 1 > /proc/sys/net/ipv4/ip_forward
+
+- name: "server wg: start the service"
+  command: >
+    wg-quick up wg0
+
+- name: "server wg: enable autostart after reboot"
+  command: >
+    systemctl enable wg-quick@wg0

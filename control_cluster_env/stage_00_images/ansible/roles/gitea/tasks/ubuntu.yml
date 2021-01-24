@@ -1,0 +1,61 @@
+---
+- name: Wait for automatic system updates
+  become: true
+  shell: "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;"
+
+- name: Wait for any possibly running unattended upgrade to finish
+  raw: >
+      systemd-run \
+        --property="After=apt-daily.service apt-daily-upgrade.service" \
+          --wait /bin/true
+
+- name: "apt: gitea setup tools"
+  become: true
+  apt:
+    update_cache: true
+    name:
+      - curl
+      - jq
+    state: present
+
+- name: "Create a /home/admin/gitea/data"
+  become: true
+  file:
+    path: /home/admin/gitea/data
+    state: directory
+    owner: admin
+    group: admin
+    mode: '0755'
+
+- name: get myuser uid
+  getent:
+    database: passwd
+    key: admin
+
+- name: get mygroup gid
+  getent:
+    database: group
+    key: admin
+
+- name: Render docker-compose.yml for gitea
+  become: true
+  template:
+    src: templates/gitea-docker-compose.template
+    dest: /home/admin/docker-compose.yml
+    owner: admin
+    group: admin
+    mode: '0644'
+
+- name: Run gitea
+  become: true
+  command: >
+      su admin -c '/usr/local/bin/docker-compose up -d'
+  args:
+    chdir: /home/admin
+
+- name: Init Gitea DB
+  become: true
+  command: >
+      docker exec gitea /bin/sh -c "su git -c \"gitea -w /data migrate\""
+  args:
+    chdir: /home/admin

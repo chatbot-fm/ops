@@ -1,0 +1,7 @@
+---
+- name: "Install network plugin"
+  shell: kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /root/k8s-plugins/calico.yaml
+  register: out
+
+- debug: msg="install result {{ out.stdout }}"
+- debug: msg="install errors {{ out.stderr }}"

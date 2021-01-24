@@ -1,0 +1,12 @@
+[Interface]
+PrivateKey = {{ hostvars[groups['bastion'][0]]['server_private_key'] }}
+Address = {{ bastion_vpn_ip }}
+ListenPort = {{ wg_port }}
+MTU = 1200
+PostUp   = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o ens4 -j MASQUERADE
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o ens4 -j MASQUERADE
+SaveConfig = true
+
+[Peer]
+PublicKey = {{ hostvars[groups['bastion'][0]]['client_public_key'] }}
+AllowedIps = {{ allow_client_ip }}

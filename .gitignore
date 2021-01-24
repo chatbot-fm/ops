@@ -1,0 +1,6 @@
+stage_output/
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+*.log
+.terraform/

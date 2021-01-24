@@ -1,0 +1,8 @@
+---
+- name: "join command"
+  debug: msg="kubeadm join --discovery-token {{hostvars[groups['k8s-control-master'][0]]['k8s_token']}} --discovery-token-ca-cert-hash sha256:{{hostvars[groups['k8s-control-master'][0]]['k8s_cert_hash']}} {{k8s_control_lb_ip}}:6443"
+- name: "join control node"
+  shell: kubeadm join --discovery-token {{hostvars[groups['k8s-control-master'][0]]['k8s_token']}} --discovery-token-ca-cert-hash sha256:{{hostvars[groups['k8s-control-master'][0]]['k8s_cert_hash']}} {{k8s_control_lb_ip}}:6443
+  register: out
+- debug: msg="k8s worker init stdout {{out.stdout}}"
+- debug: msg="k8s worker init stderr {{out.stdout}}"  

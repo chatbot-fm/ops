@@ -1,0 +1,7 @@
+---
+# jenkins
+- hosts: default
+  become: true
+  roles:
+    - base
+    - jenkins

@@ -1,0 +1,29 @@
+- name: "apt update: initial"
+  apt:
+    update_cache: yes
+
+- name: "apt: install docker-compose deps"
+  apt:
+    name:
+      - python3-pip
+      - python-pip
+      - python-dev
+      - libffi-dev
+      - gcc
+      - libc-dev
+      - make
+    state: present
+
+- name: "uname -s"
+  command: uname -s
+  register: unames
+
+- name: "uname -m"
+  command: uname -m
+  register: unamem
+  
+- name: "fetch docker compose"
+  command: curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-{{ unames.stdout }}-{{ unamem.stdout }}" -o /usr/local/bin/docker-compose
+
+- name: "setup +x for binary"
+  command: chmod +x /usr/local/bin/docker-compose    

@@ -1,0 +1,24 @@
+---
+- name: "certificate-key"
+  shell: kubeadm alpha certs certificate-key
+  register: cert_key
+
+- debug: msg="cert {{cert_key.stdout}}"
+
+- set_fact:
+    k8s_cert_key: "{{ cert_key.stdout }}"
+
+- name: "launch k8s control master"
+  command: >
+    kubeadm init \
+    --apiserver-advertise-address={{ apiserver_advertise_address }} \
+    --control-plane-endpoint={{ k8s_control_lb_ip }} \
+    --ignore-preflight-errors=NumCPU \
+    --certificate-key {{ cert_key.stdout }} \
+    --upload-certs \
+    --pod-network-cidr=10.100.0.0/16
+  register: out
+
+- debug: msg="{{ out.stdout }}"
+
+- debug: msg="{{ out.stderr }}"

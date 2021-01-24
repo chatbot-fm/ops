@@ -1,0 +1,2 @@
+- name: ubuntu tasks
+  import_tasks: ubuntu.yml

@@ -1,0 +1,30 @@
+---
+- name: Clone repo
+  command: git clone 'http://{{ admin_user }}:{{ admin_pwd }}@{{ git_dns }}/infraadmin/infra-influxdb.git'
+  args:
+    chdir: ./src
+
+- name: Copy infra-influxdb repo
+  copy:
+    src: ../../../src/influxd/
+    dest: ./src/infra-influxdb/
+
+- name: Git prepare stash
+  command: git add .
+  args:
+    chdir: ./src/infra-influxdb
+
+- name: Git commit initial infra-influxdb
+  command: git commit -a -m "initial commit"
+  args:
+    chdir: ./src/infra-influxdb
+
+- name: Git push infra-influxdb
+  command: git push
+  args:
+    chdir: ./src/infra-influxdb
+
+- name: Cleanup infra-influxdb repo
+  file:
+    path: ./src/infra-influxdb
+    state: absent

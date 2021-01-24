@@ -1,0 +1,150 @@
+- name: "fetch /etc/kubernetes/admin.conf"
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: ./stage_output/
+    flat: yes
+- name: "fetch /etc/kubernetes/controller-manager.conf"
+  fetch:
+    src: /etc/kubernetes/controller-manager.conf
+    dest: ./stage_output/
+    flat: yes
+- name: "fetch /etc/kubernetes/kubelet.conf"
+  fetch:
+    src: /etc/kubernetes/kubelet.conf
+    dest: ./stage_output/
+    flat: yes
+- name: "fetch /etc/kubernetes/scheduler.conf"
+  fetch:
+    src: /etc/kubernetes/scheduler.conf
+    dest: ./stage_output/
+    flat: yes
+- name: "fetch /etc/kubernetes/manifests/etcd.yaml"
+  fetch:
+    src: /etc/kubernetes/manifests/etcd.yaml
+    dest: ./stage_output/manifests/
+    flat: yes
+- name: "fetch /etc/kubernetes/manifests/kube-apiserver.yaml"
+  fetch:
+    src: /etc/kubernetes/manifests/kube-apiserver.yaml
+    dest: ./stage_output/manifests/
+    flat: yes
+- name: "fetch /etc/kubernetes/manifests/kube-controller-manager.yaml"
+  fetch:
+    src: /etc/kubernetes/manifests/kube-controller-manager.yaml
+    dest: ./stage_output/manifests/
+    flat: yes
+- name: "fetch /etc/kubernetes/manifests/kube-scheduler.yaml"
+  fetch:
+    src: /etc/kubernetes/manifests/kube-scheduler.yaml
+    dest: ./stage_output/manifests/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/apiserver-etcd-client.crt"
+  fetch:
+    src: /etc/kubernetes/pki/apiserver-etcd-client.crt
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/apiserver-etcd-client.key"
+  fetch:
+    src: /etc/kubernetes/pki/apiserver-etcd-client.key
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/apiserver-kubelet-client.crt"
+  fetch:
+    src: /etc/kubernetes/pki/apiserver-kubelet-client.crt
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/apiserver-kubelet-client.key"
+  fetch:
+    src: /etc/kubernetes/pki/apiserver-kubelet-client.key
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/apiserver.crt"
+  fetch:
+    src: /etc/kubernetes/pki/apiserver.crt
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/apiserver.key"
+  fetch:
+    src: /etc/kubernetes/pki/apiserver.key
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/ca.crt"
+  fetch:
+    src: /etc/kubernetes/pki/ca.crt
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/ca.key"
+  fetch:
+    src: /etc/kubernetes/pki/ca.key
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/front-proxy-ca.crt"
+  fetch:
+    src: /etc/kubernetes/pki/front-proxy-ca.crt
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/front-proxy-ca.key"
+  fetch:
+    src: /etc/kubernetes/pki/front-proxy-ca.key
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/front-proxy-client.crt"
+  fetch:
+    src: /etc/kubernetes/pki/front-proxy-client.crt
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/front-proxy-client.key"
+  fetch:
+    src: /etc/kubernetes/pki/front-proxy-client.key
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/sa.key"
+  fetch:
+    src: /etc/kubernetes/pki/sa.key
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/sa.pub"
+  fetch:
+    src: /etc/kubernetes/pki/sa.pub
+    dest: ./stage_output/pki/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/etcd/ca.crt"
+  fetch:
+    src: /etc/kubernetes/pki/etcd/ca.crt
+    dest: ./stage_output/pki/etcd/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/etcd/ca.key"
+  fetch:
+    src: /etc/kubernetes/pki/etcd/ca.key
+    dest: ./stage_output/pki/etcd/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/etcd/healthcheck-client.crt"
+  fetch:
+    src: /etc/kubernetes/pki/etcd/healthcheck-client.crt
+    dest: ./stage_output/pki/etcd/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/etcd/healthcheck-client.key"
+  fetch:
+    src: /etc/kubernetes/pki/etcd/healthcheck-client.key
+    dest: ./stage_output/pki/etcd/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/etcd/peer.crt"
+  fetch:
+    src: /etc/kubernetes/pki/etcd/peer.crt
+    dest: ./stage_output/pki/etcd/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/etcd/peer.key"
+  fetch:
+    src: /etc/kubernetes/pki/etcd/peer.key
+    dest: ./stage_output/pki/etcd/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/etcd/server.crt"
+  fetch:
+    src: /etc/kubernetes/pki/etcd/server.crt
+    dest: ./stage_output/pki/etcd/
+    flat: yes
+- name: "fetch /etc/kubernetes/pki/etcd/server.key"
+  fetch:
+    src: /etc/kubernetes/pki/etcd/server.key
+    dest: ./stage_output/pki/etcd/
+    flat: yes

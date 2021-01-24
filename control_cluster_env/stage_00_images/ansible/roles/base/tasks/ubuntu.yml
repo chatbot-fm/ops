@@ -1,0 +1,27 @@
+---
+- name: "Add user 'admin'"
+  user:
+    name: admin
+
+- name: Wait for automatic system updates
+  become: true
+  shell: "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;"
+
+- name: Wait for any possibly running unattended upgrade to finish
+  raw: systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true
+
+- name: "apt: install base"
+  apt:
+    update_cache: true
+    name:
+      - sudo
+      - netcat
+      - rsync
+      - telnet
+      - wget
+      - curl
+      - apt-transport-https
+      - gnupg-agent
+      - jq
+      - net-tools
+    state: present

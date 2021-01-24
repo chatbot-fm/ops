@@ -1,0 +1,53 @@
+---
+- hosts: bastion
+  become: true
+  vars_files:
+    - ./ansible_vars.yml
+    - ./wg_config.yml
+  tasks:
+    - name: "server wg: generate private key"
+      command: >
+          wg genkey
+      register: server_private_key
+
+    - name: "server wg: generate public key"
+      shell:
+        cmd: >
+            echo "{{ server_private_key.stdout }}" | wg pubkey
+      register: server_public_key
+
+    - name: "client wg: generate private key"
+      command: >
+          wg genkey
+      register: client_private_key
+
+    - name: "client wg: generate public key"
+      shell:
+        cmd: >
+            echo "{{ client_private_key.stdout }}" | wg pubkey
+      register: client_public_key
+
+    - set_fact:
+        server_private_key: "{{ server_private_key.stdout }}"
+        server_public_key: "{{ server_public_key.stdout }}"
+        client_private_key: "{{ client_private_key.stdout }}"
+        client_public_key: "{{ client_public_key.stdout }}"
+
+    - debug:
+        msg: "{{ hostvars[groups['bastion'][0]] }}"
+
+- hosts: bastion
+  become: true
+  vars_files:
+    - ./ansible_vars.yml
+    - ./wg_config.yml
+  roles:
+    - server-wireguard
+
+- hosts: localhost
+  become: true
+  vars_files:
+    - ./ansible_vars.yml
+    - ./wg_config.yml
+  roles:
+    - client-wireguard

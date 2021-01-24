@@ -1,0 +1,35 @@
+---
+# k8s-install
+- hosts: k8s-control-master
+  become: true
+  vars_files:
+    - ./ansible_vars.yml
+    - ./k8s_vars.yml
+  roles:
+    - k8s-control-master-init
+    - k8s-control-master-token
+    - k8s-control-master-fetch-cfg
+
+- hosts: k8s-control-slave
+  become: true
+  vars_files:
+    - ./ansible_vars.yml
+    - ./k8s_vars.yml
+  roles:
+    - k8s-control-slave-init
+
+- hosts: k8s-control-master
+  become: true
+  vars_files:
+    - ./ansible_vars.yml
+    - ./k8s_vars.yml
+  roles:
+    - k8s-control-master-plugins
+
+- hosts: k8s-worker
+  become: true
+  vars_files:
+    - ./ansible_vars.yml
+    - ./k8s_vars.yml
+  roles:
+    - k8s-worker-init

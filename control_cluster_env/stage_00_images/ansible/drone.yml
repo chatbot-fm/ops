@@ -1,0 +1,9 @@
+---
+# drone
+- hosts: default
+  become: true
+  roles:
+    - base
+    - docker-base
+    - docker-compose
+    - drone

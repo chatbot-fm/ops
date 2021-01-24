@@ -1,0 +1,20 @@
+version: "2"
+
+services:
+  server:
+    image: drone/drone:1
+    container_name: drone
+    network_mode: "bridge"
+    environment:
+      - DRONE_GITEA_SERVER=http://{{ git_dns }}
+      - DRONE_GITEA_CLIENT_ID={{ hostvars[groups['gitea'][0]]['gitea_client_id'] }}
+      - DRONE_GITEA_CLIENT_SECRET={{ hostvars[groups['gitea'][0]]['gitea_client_secret'] }}
+      - RONE_RPC_SECRET={{ master_token.stdout }}
+      - DRONE_SERVER_HOST={{ drone_dns }}
+      - DRONE_SERVER_PROTO=http
+    restart: always
+    volumes:
+      - /root/drone/data:/data
+    ports:
+      - "80:80"
+      - "443:443"

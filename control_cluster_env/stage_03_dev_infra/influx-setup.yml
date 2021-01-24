@@ -1,0 +1,29 @@
+---
+# influx setup
+- hosts: gitea
+  become: true
+  vars_files:
+    - ./ansible_vars.yml
+    - ./repo_creds.yml
+  roles:
+    - gitea-admin-init
+    - gitea-repos-init
+
+# push initial influx
+- hosts: 127.0.0.1
+  connection: local
+  vars_files:
+    - ./ansible_vars.yml
+    - ./repo_creds.yml
+  roles:
+    - git-init
+#    - push-influxdb
+
+# setup drone
+- hosts: drone
+  become: true
+  vars_files:
+    - ./ansible_vars.yml
+    - ./repo_creds.yml
+  roles:
+    - drone-setup

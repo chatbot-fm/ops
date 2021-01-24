@@ -1,0 +1,31 @@
+---
+- name: Wait for automatic system updates
+  become: true
+  shell: "while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;"
+
+- name: "prepare master token"
+  command: 'openssl rand -hex 16'
+  register: master_token
+
+- set_fact:
+    drone_token: "{{ master_token.stdout }}"
+
+- name: "Create a /root/gitea/data"
+  file:
+    path: /root/drone/data
+    state: directory
+    mode: '0755'
+
+- name: Render docker-compose.yml for gitea
+  template:
+    src: templates/drone-docker-compose.template
+    dest: /root/docker-compose.yml
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Run drone
+  command: '/usr/local/bin/docker-compose up -d'
+  become: true
+  args:
+    chdir: /root
