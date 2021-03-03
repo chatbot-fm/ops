@@ -3,6 +3,7 @@ version: "3.7"
 services:
  vpn:
   image: infra:latest
+  user: "${UID}:${GID}"
   container_name: tools
   privileged: true
   dns:
@@ -13,8 +14,13 @@ services:
   devices:
    - /dev/net/tun:/dev/net/tun
   volumes:
-   - ${HOME}/git/infra:/root/src:z
-   - ${HOME}/shadow:/root/shadow:z
+   - ${HOME}/src:/home/admin/src:z
+   - ${HOME}/shadow:/home/admin/shadow:z
+# Uncomment if you prefer to use emacs as editor.
+# Make sure ${HOME}/.emacs.d exists.
+   - ${HOME}/.emacs.d:/home/admin/.emacs.d:z  
+   - ${XAUTHORITY}:/home/admin/.Xauthority
+   - /tmp/.X11-unix:/tmp/.X11-unix  
    - /sys/fs/cgroup:/sys/fs/cgroup:ro
   network_mode: bridge
   restart: unless-stopped
@@ -23,3 +29,4 @@ services:
    - SYS_MODULE
   environment:
    - IPTABLES_MASQ=1
+   - DISPLAY=:0
