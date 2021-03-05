@@ -1,6 +1,6 @@
 variable "account_file" {
   type = string
-  default = "/root/shadow/packer-credentials.json"
+  default = "/home/admin/shadow/key.json"
 }
 
 variable "zone" {
@@ -10,17 +10,17 @@ variable "zone" {
 
 variable "project_id" {
   type = string
-  default = "tf-k8s-playground"
+  default = ""
 }
 
 source "googlecompute" "gcp-source" {
   account_file = var.account_file
   project_id = var.project_id
   source_image = "debian-10-buster-v20200413"
-  ssh_username = "packer"
+  ssh_username = "admin"
   zone = var.zone
 
-  image_name = "drone-${formatdate("YYYYMMDDhhmmss", timestamp())}"
+  image_name = "drone-v2"
 }
 
 build {
@@ -28,6 +28,6 @@ build {
   
   provisioner "ansible" {
     user = "packer"
-    playbook_file = "images/ansible/drone.yml"
+    playbook_file = "ansible/drone.yml"
   }
 }

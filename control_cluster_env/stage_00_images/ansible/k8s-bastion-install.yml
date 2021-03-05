@@ -1,9 +1,0 @@
----
-# k8s-bastion-install
-- hosts: default
-  become: true
-  roles:
-    - base
-    - wireguard
-    - docker-base
-    - k8s-base

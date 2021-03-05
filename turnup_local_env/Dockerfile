@@ -23,16 +23,13 @@ RUN \
     apt-get update && \
 	DEBIAN_FRONTEND=noninteractive apt-get install -y \
 	pkg-config bash ssh \
-	tmux wget rsync git curl jq emacs tar unzip zip htop \
+	tmux wget rsync git curl jq emacs tar unzip zip htop apache2-utils \
 	wireguard iproute2 net-tools traceroute wireguard-dkms lsof resolvconf iputils-ping \
 	g++ zlib1g-dev make libssl-dev \
 	libssl-dev \
 	python python3 python3-pip python3-argcomplete \
 	nodejs npm \
 	xserver-xorg-core xinit x11-apps xfonts-terminus fonts-powerline
-
-# setup ansible
-RUN pip3 install --user ansible
 
 # cleanup apt
 RUN DEBIAN_FRONTEND=noninteractive \
@@ -62,6 +59,9 @@ COPY --chown=admin ./conf/.bash_profile $ADMIN_HOME
 COPY --chown=admin ./apps/terraform $ADMIN_HOME/opt/bin/
 RUN mkdir -p $ADMIN_HOME/.terraform.d/plugins/linux_amd64
 COPY --chown=admin ./providers/terraform-provider-rke_linux-amd64 $ADMIN_HOME/terraform.d/plugins/linux_amd64/
+
+# setup ansible
+RUN pip3 install --user ansible
 
 # setup kubectl
 COPY --chown=admin ./apps/kubectl $ADMIN_HOME/opt/bin/

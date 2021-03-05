@@ -1,5 +1,0 @@
-images {
-  name: "drone"
-  ansible_playbook_path: "./ansible/drone.yml"
-  source_image: "debian-10-buster-v20200413"
-}
