@@ -20,7 +20,7 @@ source "googlecompute" "gcp-source" {
   ssh_username = "admin"
   zone = var.zone
 
-  image_name = "docker-registry-v2"
+  image_name = "docker-registry-v3"
 }
 
 build {
